@@ -28,10 +28,7 @@ const StudentForm = () => {
   const [selectedCard, setSelectedCard] = useState(null); // Use a single state for the selected card
   const [isAgeValid, setIsAgeValid] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
-
-
-
-
+  
 
   const [student, setStudent] = useState({
     firstName: '',
@@ -200,19 +197,14 @@ const StudentForm = () => {
     setIsFormValid(isValid);
   }, [student, isAgeValid]);
 
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(student);
-    
+    console.log('Student Details:', student);
+    setShowSuccess(true);
+    // resetForm();
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log('Student Details:', student);
-  //   setShowSuccess(true);
-  //   // resetForm();
-  // };
 
   const handleResendOtp = () => {
     sendOtp();
@@ -232,45 +224,66 @@ const handleNextClick = () => {
 };
 
 
-const FormValid = () => {
-  const { firstName, lastName, dateOfBirth, address, state, city, pincode, educationQualification, yearOfPassing, interestedCourse, referredBy } = student;
-  const isAgeValid = validateAge(dateOfBirth); // Assume this function returns a boolean
-  return (
-    firstName.match(/^[A-Za-z\s]+$/) &&
-    lastName.match(/^[A-Za-z\s]+$/) &&
-    isAgeValid &&
-    address &&
-    state &&
-    city &&
-    pincode.match(/^\d{6}$/) &&
-    educationQualification &&
-    yearOfPassing &&
-    interestedCourse &&
-    referredBy
-  );
-};
+// const FormValid = () => {
+//   const { firstName, lastName, dateOfBirth, address, state, city, pincode, educationQualification, yearOfPassing, interestedCourse, referredBy } = student;
+//   const isAgeValid = validateAge(dateOfBirth); // Assume this function returns a boolean
+//   return (
+//     firstName.match(/^[A-Za-z\s]+$/) &&
+//     lastName.match(/^[A-Za-z\s]+$/) &&
+//     isAgeValid &&
+//     address &&
+//     state &&
+//     city &&
+//     pincode.match(/^\d{6}$/) &&
+//     educationQualification &&
+//     yearOfPassing &&
+//     interestedCourse &&
+//     referredBy
+//   );
+// };
 
-useEffect(() => {
-  // Validation logic here
-  const isValid =
-    student.firstName &&
-    student.lastName &&
-    student.dateOfBirth &&
-    isAgeValid &&
-    student.gender &&
-    student.address &&
-    student.state &&
-    student.city &&
-    student.pincode.match(/^\d{6}$/) && // Valid pincode
-    student.educationQualification &&
-    (student.educationQualification !== 'Other' || student.otherQualification) &&
-    student.yearOfPassing &&
-    student.interestedCourse &&
-    student.referredBy &&
-    (student.referredBy !== 'Friend' || student.friend);
+// useEffect(() => {
+//   // Validation logic here
+//   const isValid =
+//     student.firstName &&
+//     student.lastName &&
+//     student.dateOfBirth &&
+//     isAgeValid &&
+//     student.gender &&
+//     student.address &&
+//     student.state &&
+//     student.city &&
+//     student.pincode.match(/^\d{6}$/) && // Valid pincode
+//     student.educationQualification &&
+//     (student.educationQualification !== 'Other' || student.otherQualification) &&
+//     student.yearOfPassing &&
+//     student.interestedCourse &&
+//     student.referredBy &&
+//     (student.referredBy !== 'Friend' || student.friend);
+  
+//   setIsFormValid(isValid);
+// }, [student, isAgeValid]);
+
+// Validate form function
+const validateForm = () => {
+  // Check if all required fields are filled
+  const isValid = student.firstName && student.lastName && student.dateOfBirth && student.age &&
+                  student.gender && student.address && student.state && student.city &&
+                  student.pincode && student.educationQualification &&
+                  (student.educationQualification !== 'Other' || student.otherQualification) &&
+                  student.yearOfPassing &&
+                  (student.yearOfPassing !== 'Complete' || student.yearOfCompletion) &&
+                  student.interestedCourse && student.referredBy &&
+                  (student.referredBy !== 'Social' || student.socialMedia) &&
+                  (student.referredBy !== 'Friend' || student.friend);
   
   setIsFormValid(isValid);
-}, [student, isAgeValid]);
+};
+
+// useEffect to run validation whenever fields change
+useEffect(() => {
+  validateForm();
+}, [student]);
 
 const handleCardClick = (cardType) => {
   setSelectedCard(cardType);
@@ -761,7 +774,7 @@ return (
             )}
             <div className="d-flex justify-content-between mt-3 ">
               <button type="button" className="btn btn-secondary me-3" onClick={resetForm}>Reset</button>
-              <button type="submit" className="btn btn-primary " disabled={!isFormValid}>Submit</button>
+              <button type="submit" className="btn btn-primary "disabled={!isFormValid} >Submit</button>
               {/* disabled={!isFormValid} */}
 
             </div>
@@ -824,31 +837,53 @@ return (
 
 <div className="form-container" style={{ position: 'relative', padding: '20px' }}>
   {/* Your form elements go here */}
-  
-  {/* Success message */}
-{showSuccess && (
-  <div className="alert-container">
-    <div className="alert alert-success" role="alert" style={{ width: '400px', textAlign: 'center', position: 'absolute', top: '-950%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-      Form submitted successfully!
-      <div className="d-flex justify-content-center mt-3">
-        <button 
-          className="btn btn-primary btn-sm" 
-          onClick={() => {
-            resetForm(); // Reset the form
-            setShowSuccess(false); // Hide the success message
-            setServiceType(''); // Optionally reset the service type
-            setContact({ name: '', mobile: '' });
-             setIsVerified(false);
-          }}
-        >
-          OK
-        </button>
+
+  {/* Success Popup Modal */}
+  {showSuccess && (
+    <div className="modal-overlay" style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 10,
+    }}>
+      <div
+        className="modal-content"
+        style={{
+          background: '#fff',
+          padding: '20px',
+          width: '400px',
+          borderRadius: '8px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center',
+        }}
+      >
+        <h5>Form Submitted Successfully!</h5>
+        <p>Your form has been submitted.</p>
+        <div className="d-flex justify-content-center mt-3">
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() => {
+              resetForm(); // Reset the form
+              setShowSuccess(false); // Hide the modal
+              setServiceType(''); // Optionally reset the service type
+              setContact({ name: '', mobile: '' });
+              setIsVerified(false);
+            }}
+          >
+            OK
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-)}
-
+  )}
 </div>
+
 
 
 
