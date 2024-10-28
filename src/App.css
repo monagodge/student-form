@@ -13,41 +13,29 @@ body{
   /* overflow: hidden; Prevent overflow */
 }
 
-/* Background image */
-/*  .container::before { 
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transform: translateY(17%); /* Centering the image 
-  background: url(./water.png) no-repeat center; /* Center the image 
-  background-size: contain; /* Ensure the image covers the container 
-  z-index: 0; /* Place behind other content 
-}
-
-.container > * {
-  position: relative; /* Ensure content is above the background 
-  z-index: 1; /* Higher z-index for content 
-} */
 
 /* full width for input  */
 input[type=text],input[type=password],input[type=email],input[type=number],input[type=date],input[type=age]{
   margin: 5px 0 22px 0;
   display: inline-block;
   border: none;
-  background: lightblue;
+  background: #eeeeee;
   border-radius: 35px;
   /* background-color: lightskyblue; */
 }
-input[type=text]:focus,input[type=password]:focus,input[type=email]:focus,input[type=number]:focus
-,input[type=date]:focus,input[type=age]:focus{
-  /* background-color: #ddd; */
-  background-color: lightskyblue;
-  outline: none;
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+input[type=date]:focus,
+input[type=age]:focus {
+  background-color: #eeeeee;
+  outline: none; /* Removes the default focus outline */
   background: transparent;
+  border: 1px solid #f6ae22; /* Adds border color when focused */
+  box-shadow: none; /* Remove any box-shadow that might be applied */
 }
+
 
 hr{
   border: 1px solid white;
@@ -115,3 +103,17 @@ hr{
   width: 400px; /* Set a fixed width */
   text-align: center; /* Center text */
 }
+.selected-card {
+  border-color: #f6ae22;
+}
+.btn-warning {
+  background-color: #6c757d; /* Default background color */
+}
+
+.btn-warning:disabled {
+  background-color: #6c757d; /* Background color when disabled */
+  color: #000; /* Optional: change text color for better contrast */
+  cursor: not-allowed; /* Change cursor to indicate it's disabled */
+}
+
+

@@ -28,7 +28,12 @@ const StudentForm = () => {
   const [selectedCard, setSelectedCard] = useState(null); // Use a single state for the selected card
   const [isAgeValid, setIsAgeValid] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
-  
+  const [states, setStates] = useState([]); // State to store list of states
+  const [error, setError] = useState(null); // State to store error messages
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState('');
+
 
   const [student, setStudent] = useState({
     firstName: '',
@@ -288,6 +293,66 @@ useEffect(() => {
 const handleCardClick = (cardType) => {
   setSelectedCard(cardType);
 };
+
+
+// fetch state api
+useEffect(() => {
+  // Fetch data from the API
+  fetch("https://countriesnow.space/api/v0.1/countries/states")
+    .then((response) => response.json())
+    .then((data) => {
+      // Find the country "India"
+      const india = data.data.find((country) => country.name === "India");
+
+      // Check if India is found and has states
+      if (india && india.states) {
+        // Update the states with the list of states from India
+        setStates(india.states.map((state) => state.name));
+      } else {
+        setError("No states found for India");
+      }
+    })
+    .catch((error) => {
+      setError("Can't fetch data");
+      console.error("Error fetching data:", error);
+    });
+}, []); // Empty dependency array so it runs only once
+
+// ens fetch api state code
+
+
+// api for city
+
+useEffect(() => {
+  fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+          country: "India",
+          state: "Maharashtra"
+      })
+  })
+  .then(response => response.json())
+  .then(data => {
+      setLoading(false);
+      if (data.data && data.data.length > 0) {
+          setCities(data.data);
+      } else {
+          setError("No cities found for Maharashtra");
+      }
+  })
+  .catch(err => {
+      setLoading(false);
+      setError("Can't fetch data");
+      console.error('Error fetching data:', err);
+  });
+}, []);
+
+// end api city
+
+
 return (
   <div className="bg-light min-vh-100 d-flex justify-content-center align-items-center">
     <div className="bg-white p-4 rounded shadow" style={{ width: '500px' }}>
@@ -296,39 +361,47 @@ return (
           // Service type selection
           <div className="text-center">
             <h5>Select Service Type</h5>
-            <div className="d-flex justify-content-center mt-3">
-            <div
-        className={`card me-3 ${selectedCard === 'Training' ? 'selected-card' : ''}`}
-        style={{ width: '18rem', cursor: 'pointer',
+            <div className="d-md-flex d-block justify-content-center align-items-center mt-3">
+  <div
+    className={`card mb-3 mx-auto me-md-3 ${selectedCard === 'Training' ? 'selected-card' : ''}`}
+    style={{ width: '18rem', cursor: 'pointer' }}
+    onClick={() => handleCardClick('Training')}
+  >
+          <h5 className="card-title text-center mt-5 mb-5">Training</h5>
 
-         }}
-        onClick={() => handleCardClick('Training')}
-      >
-        <img src="./training.png" className="card-img-top" alt="Training" style={{ height: '150px', objectFit: 'cover' }} />
-        <div className="card-body">
-          <h5 className="card-title">Training</h5>
-        </div>
-      </div>
-      <div
-        className={`card me-3 ${selectedCard === 'Development' ? 'selected-card' : ''}`}
-        style={{ width: '18rem', cursor: 'pointer'}}
-        onClick={() => handleCardClick('Development')}
-      >
-        <img src="./development.png" className="card-img-top" alt="Development" style={{ height: '150px', objectFit: 'cover' }} />
-        <div className="card-body">
-          <h5 className="card-title">Development</h5>
-        </div>
-      </div>
-            </div>
-            <div className="mt-4">
-              <button 
-                className="btn btn-success" 
-                onClick={handleNextClick}
-                disabled={!selectedCard} // Disable button until an option is selected
+    <img src="./training.png" className="card-img-bottom" alt="Training" style={{ height: '150px', objectFit: 'cover' }} />
+    <div className="card-body">
+    </div>
+  </div>
+  <div
+    className={`card mb-3 mx-auto ${selectedCard === 'Development' ? 'selected-card' : ''}`}
+    style={{ width: '18rem', cursor: 'pointer' }}
+    onClick={() => handleCardClick('Development')}
+  >
+          <h5 className="card-title text-center mt-5 mb-5">Development</h5>
 
-              >
-                Next
-              </button>
+    <img src="./development.png" className="card-img-bottom" alt="Development" style={{ height: '150px', objectFit: 'cover' }} />
+    <div className="card-body">
+    </div>
+  </div>
+</div>
+
+            
+            <div className="mt-4 mb-n5">
+            <button
+  style={{
+    backgroundColor: selectedCard ? '#f6ae22' : '#272425',
+    borderColor: selectedCard ? '#f6ae22' : '#272425', // Optional to match the border color
+    color: 'white'
+  }}
+  className="btn"
+  onClick={handleNextClick}
+  disabled={!selectedCard}
+>
+  Next
+</button>
+
+
             </div>
           </div>
         ):(
@@ -365,10 +438,14 @@ return (
                     title="Please enter a valid 10-digit mobile number"
                   />
                 </div>
-                <button type="submit" className="btn btn-primary"
-          disabled={!contact.name || !contact.mobile.match(/^\d{10}$/)} // Disable button until both fields are filled correctly
+                <button 
+  type="submit" 
+  className="btn btn-warning" 
+  disabled={!contact.name || !contact.mobile.match(/^\d{10}$/)}
+>
+  Send OTP
+</button>
 
-                >Send OTP</button>
               </form>
             </div>
           )
@@ -493,87 +570,44 @@ return (
               <label className="form-label">
   <FontAwesomeIcon icon={faMapMarkerAlt} /> State
 </label>
-<select
-  className="form-control"
+
+
+<select   className="form-control"
   name="state"
   value={student.state}
   onChange={handleChange}
   required
-  style={{borderRadius:'35px'}}
->
-  <option value="" style={{borderRadius:'35px'}}>Select a state</option>
-  <option value="AL">Alabama</option>
-  <option value="AK">Alaska</option>
-  <option value="AZ">Arizona</option>
-  <option value="AR">Arkansas</option>
-  <option value="CA">California</option>
-  <option value="CO">Colorado</option>
-  <option value="CT">Connecticut</option>
-  <option value="DE">Delaware</option>
-  <option value="FL">Florida</option>
-  <option value="GA">Georgia</option>
-  <option value="HI">Hawaii</option>
-  <option value="ID">Idaho</option>
-  <option value="IL">Illinois</option>
-  <option value="IN">Indiana</option>
-  <option value="IA">Iowa</option>
-  <option value="KS">Kansas</option>
-  <option value="KY">Kentucky</option>
-  <option value="LA">Louisiana</option>
-  <option value="ME">Maine</option>
-  <option value="MD">Maryland</option>
-  <option value="MA">Massachusetts</option>
-  <option value="MI">Michigan</option>
-  <option value="MN">Minnesota</option>
-  <option value="MS">Mississippi</option>
-  <option value="MO">Missouri</option>
-  <option value="MT">Montana</option>
-  <option value="NE">Nebraska</option>
-  <option value="NV">Nevada</option>
-  <option value="NH">New Hampshire</option>
-  <option value="NJ">New Jersey</option>
-  <option value="NM">New Mexico</option>
-  <option value="NY">New York</option>
-  <option value="NC">North Carolina</option>
-  <option value="ND">North Dakota</option>
-  <option value="OH">Ohio</option>
-  <option value="OK">Oklahoma</option>
-  <option value="OR">Oregon</option>
-  <option value="PA">Pennsylvania</option>
-  <option value="RI">Rhode Island</option>
-  <option value="SC">South Carolina</option>
-  <option value="SD">South Dakota</option>
-  <option value="TN">Tennessee</option>
-  <option value="TX">Texas</option>
-  <option value="UT">Utah</option>
-  <option value="VT">Vermont</option>
-  <option value="VA">Virginia</option>
-  <option value="WA">Washington</option>
-  <option value="WV">West Virginia</option>
-  <option value="WI">Wisconsin</option>
-  <option value="WY">Wyoming</option>
-</select>
+  style={{borderRadius:'35px'}}>
 
-
-              </div>
+        <option value="" style={{borderRadius:'35px'}}>Select a State</option>
+        {error ? (
+          <option value="">{error}</option>
+        ) : (
+          states.map((state, index) => (
+            <option key={index} value={state}>
+              {state}
+            </option>
+          ))
+        )}
+      </select>
+   </div>
               <div className="col">
                 <label className="form-label">
   <FontAwesomeIcon icon={faMapMarkerAlt} /> City
 </label>
-<select
-  className="form-control"
-  name="city"
-  value={student.city}
-  onChange={handleChange}
-  required
-  style={{borderRadius:'35px'}}
->
+<select 
+         className="form-control"
+        name="city"
+        value={student.city}
+        onChange={handleChange}
+        required
+        style={{borderRadius:'35px'}}>
   <option value=""  style={{borderRadius:'35px'}}>Select a city</option>
-  <option value="Mumbai">Mumbai</option>
-  <option value="Pune">Pune</option>
-  <option value="Nagpur">Nagpur</option>
-  <option value="Nashik">Nashik</option>
-  <option value="Aurangabad">Aurangabad</option>
+  {loading && <option value="">Loading cities...</option>}
+                {error && <option value="">{error}</option>}
+                {cities.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                ))}
   {/* Add more cities as needed */}
 </select>
 
@@ -774,7 +808,7 @@ return (
             )}
             <div className="d-flex justify-content-between mt-3 ">
               <button type="button" className="btn btn-secondary me-3" onClick={resetForm}>Reset</button>
-              <button type="submit" className="btn btn-primary "disabled={!isFormValid} >Submit</button>
+              <button type="submit" className="btn btn-warning"disabled={!isFormValid} >Submit</button>
               {/* disabled={!isFormValid} */}
 
             </div>
@@ -820,7 +854,7 @@ return (
               <button type="button" className="btn btn-danger me-5" onClick={() => setShowModal(false)}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary"
+              <button type="submit" className="btn btn-warning"
                                     disabled={!otp} // Disable button until OTP is entered
 
               >
@@ -867,7 +901,7 @@ return (
         <p>Your form has been submitted.</p>
         <div className="d-flex justify-content-center mt-3">
           <button
-            className="btn btn-primary btn-sm"
+            className="btn btn-warning btn-sm"
             onClick={() => {
               resetForm(); // Reset the form
               setShowSuccess(false); // Hide the modal
@@ -883,10 +917,6 @@ return (
     </div>
   )}
 </div>
-
-
-
-
       </div>
     </div>
   );
