@@ -1,8 +1,11 @@
 *{
   box-sizing: border-box;
 }
-body{
+body,html{
   background-color: white;
+  height: 100%;
+  margin: 0;
+  /* overflow: hidden; */
 }
 .container {
   background-color: lightskyblue; /* Solid white background */
@@ -11,15 +14,17 @@ body{
   border-radius: 35px; /* Rounded corners */
   /* position: relative; Enable absolute positioning for overlay */
   /* overflow: hidden; Prevent overflow */
+  min-height: 100vh;
 }
-
 
 /* full width for input  */
 input[type=text],input[type=password],input[type=email],input[type=number],input[type=date],input[type=age]{
-  margin: 5px 0 22px 0;
+  /* margin: 5px 0 22px 0; */
+  margin: 0 0 10px 0;
   display: inline-block;
-  border: none;
-  background: #eeeeee;
+  /* border: none; */
+  /* background: #eeeeee; */
+background: white;
   border-radius: 35px;
   /* background-color: lightskyblue; */
 }
@@ -43,10 +48,10 @@ hr{
 }
 /* css for btn */
 .btn{
-  color: white;
+  /* color: white; */
   padding: 8px 14px;
   margin: 8px 0;
-  border: none;
+  /* border: none; */
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
@@ -73,6 +78,19 @@ hr{
   background-color: white;
 }
 
+.modal-dialog {
+  /* background: #fff; */
+  /* padding: 20px; */
+  /* width: 400px; */
+  border-radius: 8px;
+  /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
+  /* text-align: center; */
+  margin-top: 225px;
+
+  
+  
+}
+
 .modal-image {
   width: 100%;
   border-radius: 15px;
@@ -86,7 +104,7 @@ hr{
   border: 2px solid blue; /* Change color as needed */
 }
 /* outside should be blur for alert of sucessful */
-.alert-container {
+.alert-container{
   position: fixed; /* Use fixed to position relative to the viewport */
   top: 50%; /* Center vertically */
   left: 50%; /* Center horizontally */
@@ -103,17 +121,188 @@ hr{
   width: 400px; /* Set a fixed width */
   text-align: center; /* Center text */
 }
-.selected-card {
-  border-color: #f6ae22;
-}
-.btn-warning {
+.btn-secondary {
   background-color: #6c757d; /* Default background color */
 }
 
+/* Default enabled state */
+.btn-warning {
+  background-color: #f6ae22 !important; /* Background color when button is enabled */
+  color: black;
+  border-color: #f6ae22; /* Border color matching the background */
+}
+
+/* Disabled state */
 .btn-warning:disabled {
-  background-color: #6c757d; /* Background color when disabled */
-  color: #000; /* Optional: change text color for better contrast */
+  background-color: #272425 !important; /* Background color when button is disabled */
+  color: white; /* Text color for better contrast */
+  border-color: #272425; /* Border color matching the background */
   cursor: not-allowed; /* Change cursor to indicate it's disabled */
 }
 
+
+
+
+
+.selected-card {
+  background-color: #FEAE22; /* Desired background color */
+  border: none; /* Remove borders */
+  outline: none; /* Remove focus outlines */
+  border-color:  #f6ae22;
+
+}
+
+.selected-card::before,
+.selected-card::after {
+  content: none; /* Reset pseudo-elements */
+}
+
+.input-truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.is-invalid {
+  border-color: #dc3545; /* Red border for invalid input */
+}
+.invalid-feedback {
+  color: #dc3545; /* Red text for error message */
+  font-size: 0.875rem;
+}
+
+.btn-outline-danger{
+  color: #272425 !important;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -31px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Black color with 50% opacity */
+  z-index: 1; /* Ensures the overlay is above the video */
+}
+
+/* 1 */
+@media screen and (min-width: 1200px) {
+  .min-vh-100{
+    margin-top: -101px;
+    margin-bottom: -110px;
+
+  }
+  video{
+    /* height: 83% !important; */
+  }
+}
+/* 2 */
+@media screen and (min-width:992px)and (max-width:1199px) {
+  .min-vh-100{
+    margin-top: -101px;
+    margin-bottom: -110px;
+
+  }
+  video{
+    /* height: 86% !important; */
+  }
+}
+/* 3 */
+@media screen and (min-width:768px)and (max-width:991px) {
+  .min-vh-100{
+    margin-top: -101px;
+    margin-bottom: -110px;
+
+  }
+  video{
+    /* height: 85% !important; */
+  }
+}
+/* 4 */
+@media screen and (min-width:576px)and (max-width:767px) {
+  .min-vh-100{
+    margin-top: -101px;
+    margin-bottom: -110px;
+
+  }
+  video{
+    /* height:81% !important; */
+  }
+}
+/* 5 */
+@media screen and (min-width:400px) and  (max-width:550px) {
+  .min-vh-100{
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+  video{
+    /* height: 101% !important; */
+    /* top: 83px; */
+  }
+}
+/*  */
+@media screen and (min-width:500px) and  (max-width:550px) {
+  .min-vh-100{
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+  video{
+    /* height: 144% !important; */
+    /* top: 83px; */
+  }
+}
+/* 6 */
+@media screen and (min-width:400px) and  (max-width:450px) {
+  .min-vh-100{
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+  video{
+    /* height: 124% !important; */
+    /* top: 0; */
+  }
+}
+/*  */
+@media screen and (min-width:300px) and  (max-width:360px) {
+  .min-vh-100{
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+  video{
+    height: 152% !important;
+    top: 0;
+  }
+}
+/* 7 */
+@media screen and (min-width:361px) and  (max-width:379px) {
+  .min-vh-100{
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+  video{
+    height: 168% !important;
+    top: 0;
+  }
+}
+/* 8 */
+@media screen and (min-width:380px) and  (max-width:400px) {
+  .min-vh-100{
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+  }
+  video{
+    height: 133% !important;
+    top: 0;
+  }
+}
+.important-margin {
+  margin-top: 115px !important;
+  margin-bottom: 121px !important;
+}
 

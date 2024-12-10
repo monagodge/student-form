@@ -1,0 +1,113 @@
+/* Footer container */
+.footer {
+  background-color: #272425;
+  color: #eeeeee;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  flex-direction: column; /* Stack items vertically by default */
+}
+
+/* Footer content section */
+.footer-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Allows items to wrap to the next line when necessary */
+  /* margin-bottom: 20px; Adds space between social links and copyright/ */
+}
+
+/* Footer address section */
+.footer-address {
+  flex: 1;
+  text-align: left;
+  margin-right: 20px;
+}
+
+/* Social links section */
+.social-links {
+  display: flex;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #eeeeee;
+  margin-left: 15px;
+  font-size: 24px; /* Adjust icon size */
+}
+
+/* Hover effect on social icons */
+.social-links a:hover {
+  color: #f6ae22;
+}
+
+/* Footer copyright section */
+.footer-copyright {
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  justify-content: center; /* Align content center */
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Footer copyright text link */
+.footer-copyright a {
+  color: #007bff;
+  text-decoration: none;
+  padding-left: 5px; /* Add a small gap between copyright text and link */
+}
+
+.footer-copyright a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  /* On mobile view, stack the address, social links, and copyright vertically */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Ensure social links are centered and stacked on mobile view */
+  .social-links {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  /* Address section gets centered and stacked on mobile */
+  .footer-address {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  /* Make sure copyright remains in one line with some space */
+  .footer-copyright {
+    flex-direction: row;  /* Keep it in one line */
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer-copyright a {
+    display: inline; /* Keep the link inline */
+    padding-left: 5px; /* Small gap between text and link */
+  }
+}
+h5 a {
+  color: #f6ae22; /* Change the color to yellow */
+  text-decoration: none;
+}
+
+h5 a:hover {
+  text-decoration: underline;
+}

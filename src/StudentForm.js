@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -151,6 +151,14 @@ const StudentForm = () => {
   };
   
 
+  // Handle changes in the reason input
+  const handleReasonChange = (e) => {
+    setStudent((prevStudent) => ({
+      ...prevStudent,
+      reason: e.target.value,
+    }));
+  };
+
   const resetForm = () => {
     setStudent({
       firstName: '',
@@ -181,6 +189,7 @@ const StudentForm = () => {
     
   };
 
+  
   useEffect(() => {
     // Validate form on change
     const isValid = (
@@ -229,70 +238,41 @@ const handleNextClick = () => {
 };
 
 
-// const FormValid = () => {
-//   const { firstName, lastName, dateOfBirth, address, state, city, pincode, educationQualification, yearOfPassing, interestedCourse, referredBy } = student;
-//   const isAgeValid = validateAge(dateOfBirth); // Assume this function returns a boolean
-//   return (
-//     firstName.match(/^[A-Za-z\s]+$/) &&
-//     lastName.match(/^[A-Za-z\s]+$/) &&
-//     isAgeValid &&
-//     address &&
-//     state &&
-//     city &&
-//     pincode.match(/^\d{6}$/) &&
-//     educationQualification &&
-//     yearOfPassing &&
-//     interestedCourse &&
-//     referredBy
-//   );
-// };
-
-// useEffect(() => {
-//   // Validation logic here
-//   const isValid =
-//     student.firstName &&
-//     student.lastName &&
-//     student.dateOfBirth &&
-//     isAgeValid &&
-//     student.gender &&
-//     student.address &&
-//     student.state &&
-//     student.city &&
-//     student.pincode.match(/^\d{6}$/) && // Valid pincode
-//     student.educationQualification &&
-//     (student.educationQualification !== 'Other' || student.otherQualification) &&
-//     student.yearOfPassing &&
-//     student.interestedCourse &&
-//     student.referredBy &&
-//     (student.referredBy !== 'Friend' || student.friend);
-  
-//   setIsFormValid(isValid);
-// }, [student, isAgeValid]);
-
 // Validate form function
-const validateForm = () => {
-  // Check if all required fields are filled
-  const isValid = student.firstName && student.lastName && student.dateOfBirth && student.age &&
-                  student.gender && student.address && student.state && student.city &&
-                  student.pincode && student.educationQualification &&
-                  (student.educationQualification !== 'Other' || student.otherQualification) &&
-                  student.yearOfPassing &&
-                  (student.yearOfPassing !== 'Complete' || student.yearOfCompletion) &&
-                  student.interestedCourse && student.referredBy &&
-                  (student.referredBy !== 'Social' || student.socialMedia) &&
-                  (student.referredBy !== 'Friend' || student.friend);
-  
+const validateForm = useCallback(() => {
+  const isValid =
+    student.firstName &&
+    student.lastName &&
+    student.dateOfBirth &&
+    student.age &&
+    student.gender &&
+    student.address &&
+    student.state &&
+    student.city &&
+    student.pincode &&
+    student.educationQualification &&
+    (student.educationQualification !== "Other" || student.otherQualification) &&
+    student.yearOfPassing &&
+    (student.yearOfPassing !== "Complete" || student.yearOfCompletion) &&
+    student.interestedCourse &&
+    student.referredBy &&
+    (student.referredBy !== "Social" || student.socialMedia) &&
+    (student.referredBy !== "Friend" || student.friend);
+
   setIsFormValid(isValid);
-};
+}, [student]);
+
 
 // useEffect to run validation whenever fields change
 useEffect(() => {
   validateForm();
-}, [student]);
+}, [student,validateForm ]);
+
 
 const handleCardClick = (cardType) => {
   setSelectedCard(cardType);
 };
+
 
 
 // fetch state api
@@ -354,14 +334,65 @@ useEffect(() => {
 
 
 return (
-  <div className="bg-light min-vh-100 d-flex justify-content-center align-items-center">
-    <div className="bg-white p-4 rounded shadow" style={{ width: '500px' }}>
+
+  
+  <div className="bg-light min-vh-100 d-flex justify-content-center align-items-center" 
+
+  style={{
+    position: 'relative',
+    width: '100%',
+    height: '100%', // Ensures the container takes the full viewport height
+    overflow: 'hidden', // Hides anything that overflows (in case video gets too large)
+  }}  
+>
+<video 
+    autoPlay 
+    loop 
+    muted 
+    playsInline
+    style={{
+      position: 'absolute',
+      top: 0,  // Position the video at the top of the container
+      left: 0,
+      width: '100%', // Stretch the video to the full width of the container
+      height: '100%', // Stretch the video to the full height of the container
+      objectFit: 'cover', // Ensures the video covers the entire container without distorting
+      zIndex: 'auto', // Keeps the video behind other content
+    }}
+  >
+    <source src="./MicrosoftTeams-video.mp4" type="video/mp4" />
+    <source src="./video.webm" type="video/webm" />
+    <source src="./video.ogg" type="video/ogg" />
+  </video>
+
+  {/* Black Overlay */}
+  <div className="overlay" style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Black overlay with transparency
+    zIndex: 1, // Ensures overlay is above the video
+  }}></div>
+
+
+<div
+  className="bg-white p-4 rounded shadow important-margin "
+  style={{ 
+    width: '500px', 
+    userSelect: 'none',  // Corrected property name to camelCase
+    cursor: 'default', 
+      zIndex:'1'
+       // Added missing comma and fixed syntax
+  }}
+>
       {!isVerified ? (
         serviceType === '' ? (
           // Service type selection
           <div className="text-center">
-            <h5>Select Service Type</h5>
-            <div className="d-md-flex d-block justify-content-center align-items-center mt-3">
+            <h3>Select Service Type</h3>
+            <div className="d-md-flex d-block justify-content-center align-items-center mt-4 mb-3 ">
   <div
     className={`card mb-3 mx-auto me-md-3 ${selectedCard === 'Training' ? 'selected-card' : ''}`}
     style={{ width: '18rem', cursor: 'pointer' }}
@@ -369,7 +400,8 @@ return (
   >
           <h5 className="card-title text-center mt-5 mb-5">Training</h5>
 
-    <img src="./training.png" className="card-img-bottom" alt="Training" style={{ height: '150px', objectFit: 'cover' }} />
+    <img     src={require('./training.png')}
+className="card-img-bottom" alt="Training" style={{ height: '150px', objectFit: 'cover' }} />
     <div className="card-body">
     </div>
   </div>
@@ -380,21 +412,21 @@ return (
   >
           <h5 className="card-title text-center mt-5 mb-5">Development</h5>
 
-    <img src="./development.png" className="card-img-bottom" alt="Development" style={{ height: '150px', objectFit: 'cover' }} />
+    <img src={require('./Development.png')} className="card-img-bottom" alt="Development" style={{ height: '150px', objectFit: 'cover' }} />
     <div className="card-body">
     </div>
   </div>
 </div>
 
             
-            <div className="mt-4 mb-n5">
+            <div className="mt-0 mb-n5">
             <button
   style={{
     backgroundColor: selectedCard ? '#f6ae22' : '#272425',
     borderColor: selectedCard ? '#f6ae22' : '#272425', // Optional to match the border color
-    color: 'white'
+    // color: 'white'
   }}
-  className="btn"
+  className="btn btn-warning"
   onClick={handleNextClick}
   disabled={!selectedCard}
 >
@@ -414,7 +446,7 @@ return (
                   </label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-truncate"
                     name="name"
                     value={contact.name}
                     onChange={handleContactChange}
@@ -449,8 +481,10 @@ return (
               </form>
             </div>
           )
-        ) : (
-          <form onSubmit={handleSubmit}>
+        ) : 
+        (
+          <div id='form3'>
+              <form onSubmit={handleSubmit}>
             <h4 className="text-center">Student Form</h4>
             <div className="row mb-3">
               <div className="col">
@@ -459,7 +493,7 @@ return (
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control input-truncate"
                   name="firstName"
                   value={student.firstName}
                   onChange={handleChange}
@@ -474,7 +508,7 @@ return (
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control input-truncate"
                   name="lastName"
                   value={student.lastName}
                   onChange={handleChange}
@@ -500,6 +534,7 @@ return (
         validateAge(dob); // Validate age
       }}
       required
+       
     />
     {!isAgeValid && <div className="invalid-feedback">You must be at least 18 years old.</div>}
               </div>
@@ -508,12 +543,18 @@ return (
                   <FontAwesomeIcon icon={faUsers} /> Age
                 </label>
                 <input
-                  type="text"
-                  className="form-control"
-                  name="age"
-                  value={student.age}
-                  readOnly
-                />
+  type="text"
+  className="form-control"
+  name="age"
+  value={student.age}
+  readOnly
+  disabled
+  style={{
+    outline: 'none',
+    caretColor: 'transparent', // Prevent blinking caret
+  }}
+/>
+
               </div>
             </div>
             <div className="row mb-3">
@@ -531,7 +572,12 @@ return (
             required
             style={{ marginRight: '5px' }} // Adjust spacing between input and icon
           />
-          <i className="fas fa-male" style={{ fontSize: '30px', marginRight: '5px' }}></i> Male
+          <img
+src={require('./Male-icon (1).svg').default}    
+alt="Male Icon"
+    style={{ width: "20px", height: "20px", marginRight: "5px" }}
+  />
+           Male
         </label>
 
         <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
@@ -544,27 +590,33 @@ return (
             required
             style={{ marginRight: '5px' }} // Adjust spacing between input and icon
           />
-          <i className="fas fa-female" style={{ fontSize: '30px', marginRight: '5px' }}></i> Female
+                   <img
+src={require('./woman-female-icon (1).svg').default}    
+alt="Male Icon"
+    style={{ width: "20px", height: "20px", marginRight: "5px" }}
+  />
+           Female
         </label>
       </div>
     </div>
   </div>
 </div>
 
+<div className="mb-3">
+  <label className="form-label">
+    <FontAwesomeIcon icon={faHome} /> Address
+  </label>
+  <textarea
+    className="form-control"
+    name="address"
+    value={student.address}
+    onChange={handleChange}
+    required
+    rows="3" // Sets the height of the textarea
+    placeholder="Enter your address" // Optional placeholder for guidance
+  ></textarea>
+</div>
 
-            <div className="mb-3">
-              <label className="form-label">
-                <FontAwesomeIcon icon={faHome} /> Address
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="address"
-                value={student.address}
-                onChange={handleChange}
-                required
-              />
-            </div>
             <div className="row mb-3">
               <div className="col">
               <label className="form-label">
@@ -661,24 +713,41 @@ return (
                 />
               </div>
             )}
-            <div className="mb-3">
-  <label className="form-label">
-    <FontAwesomeIcon icon={faClipboardCheck} /> Education Status
-  </label>
-  <select
-    style={{ borderRadius: '35px' }}
-    name="yearOfPassing"
-    className="form-select"
-    value={student.yearOfPassing}
-    onChange={handleChange}
-    required
-  >
-    <option value="" style={{ borderRadius: '35px' }}>Select</option>
-    <option value="Complete">Complete</option>
-    <option value="Pursuing">Pursuing</option>
-    <option value="Drop-off">Drop-off</option>
-  </select>
-</div>
+          <div className="mb-3">
+      <label className="form-label">
+        <FontAwesomeIcon icon={faClipboardCheck} /> Education Status
+      </label>
+      <select
+        style={{ borderRadius: '35px' }}
+        name="yearOfPassing"
+        className="form-select"
+        value={student.yearOfPassing}
+        onChange={handleChange}
+        required
+      >
+        <option value="" style={{ borderRadius: '35px' }}>
+          Select
+        </option>
+        <option value="Complete">Complete</option>
+        <option value="Pursuing">Pursuing</option>
+        <option value="Drop-off">Drop-off</option>
+      </select>
+
+      {/* Display reason input if "Drop-off" is selected */}
+      {student.yearOfPassing === 'Drop-off' && (
+        <div className="mt-3">
+          <label className="form-label">Reason for Drop-off</label>
+          <input
+            type="text"
+            className="form-control"
+            value={student.reason}
+            onChange={handleReasonChange}
+            placeholder="Enter reason for dropping off"
+            required
+          />
+        </div>
+      )}
+    </div>
 
 {student.yearOfPassing === "Complete" && (
   <div className="mb-1">
@@ -693,8 +762,14 @@ return (
       onChange={handleChange}
       required
     />
+    {student.error && (
+      <p className="text-danger">
+        Year of Completion must be between 2000 and 2026.
+      </p>
+    )}
   </div>
 )}
+
 
             <div className="mb-1">
               <label className="form-label">
@@ -710,8 +785,13 @@ return (
                 <option value="" style={{borderRadius:'35px'}}> Select</option>
                 <option value="Frontend Developer">Frontend Developer</option>
                 <option value="Full Stack Developer">Full Stack Developer</option>
-                <option value="UI/UX Designer">UI/UX Designer</option>
+                <option value="UI/ UX Designing">UI/ UX Designing</option>
                 <option value="Web Developer">Web Developer</option>
+                <option value="Data-Analytics">Data-Analytics</option>
+                <option value="Business Analytics">Business Analytics</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Digital marketing">Digital marketing</option>
+                <option value="MERN Stack Development">MERN Stack Development</option>
               </select>
             </div>
             <div className="row mb-3">
@@ -737,8 +817,8 @@ return (
               {student.referredBy === 'Social' && (
   <div className="mb-3">
     <label className="form-label">Select Social Media Links</label>
-    <div>
-      <label style={{ marginRight: '10px', cursor: 'pointer' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+      <label style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
         <input
           type="radio"
           name="socialMedia"
@@ -750,7 +830,7 @@ return (
         <img src="./linkdin.png" alt="LinkedIn" style={{ width: '45px', marginLeft: '5px' }} />
       </label>
       
-      <label style={{ marginRight: '10px', cursor: 'pointer' }}>
+      <label style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
         <input
           type="radio"
           name="socialMedia"
@@ -762,7 +842,7 @@ return (
         <img src="./instragram.png" alt="Instagram" style={{ width: '50px', marginLeft: '5px' }} />
       </label>
 
-      <label style={{ marginRight: '10px', cursor: 'pointer' }}>
+      <label style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
         <input
           type="radio"
           name="socialMedia"
@@ -774,7 +854,7 @@ return (
         <img src="./image.png" alt="Google" style={{ width: '50px', marginLeft: '5px' }} />
       </label>
 
-      <label style={{ marginRight: '10px', cursor: 'pointer' }}>
+      <label style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
         <input
           type="radio"
           name="socialMedia"
@@ -788,6 +868,7 @@ return (
     </div>
   </div>
 )}
+
 
             {student.referredBy === 'Friend' && (
               <div className="mb-3">
@@ -807,17 +888,22 @@ return (
               </div>
             )}
             <div className="d-flex justify-content-between mt-3 ">
-              <button type="button" className="btn btn-secondary me-3" onClick={resetForm}>Reset</button>
+              <button type="button" className="btn btn-outline-secondary  text-blank me-3" onClick={resetForm}>Reset</button>
               <button type="submit" className="btn btn-warning"disabled={!isFormValid} >Submit</button>
               {/* disabled={!isFormValid} */}
 
             </div>
           </form>
+            </div>
+        
         )}
 
       {/* OTP Modal */}
-{showModal && (
-  <div className="modal show" style={{ display: 'block' }}>
+      {showModal && (
+  <div 
+    className="modal show d-block position-fixed top-50 start-50 translate-middle" 
+    style={{ zIndex: 1050 }} 
+  >
     <div className="modal-dialog">
       <div className="modal-content">
         <div className="modal-header">
@@ -840,10 +926,10 @@ return (
                 onChange={handleOtpChange}
                 required
               />
-              <div className="d-grid gap-1 mt-1  justify-content-md-end">
-                <a 
-                  href="#!" 
-                  className="text-primary text-decoration-none" 
+              <div className="d-grid gap-1 mt-1 justify-content-md-end">
+                <a
+                  href="#!"
+                  className="text-primary text-decoration-none"
                   onClick={handleResendOtp}
                 >
                   Resend OTP
@@ -851,12 +937,17 @@ return (
               </div>
             </div>
             <div className="d-flex justify-content-between mt-3">
-              <button type="button" className="btn btn-danger me-5" onClick={() => setShowModal(false)}>
+              <button
+                type="button"
+                className="btn btn-outline-secondary  text-blank me-5"
+                onClick={() => setShowModal(false)}
+              >
                 Cancel
               </button>
-              <button type="submit" className="btn btn-warning"
-                                    disabled={!otp} // Disable button until OTP is entered
-
+              <button
+                type="submit"
+                className="btn btn-warning"
+                disabled={!otp} // Disable button until OTP is entered
               >
                 Verify OTP
               </button>
@@ -869,7 +960,9 @@ return (
 )}
 
 
-<div className="form-container" style={{ position: 'relative', padding: '20px' }}>
+
+
+<div className="form-container" style={{ position: 'relative', padding: '0px' }}>
   {/* Your form elements go here */}
 
   {/* Success Popup Modal */}
@@ -887,33 +980,41 @@ return (
       zIndex: 10,
     }}>
       <div
-        className="modal-content"
-        style={{
-          background: '#fff',
-          padding: '20px',
-          width: '400px',
-          borderRadius: '8px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center',
-        }}
-      >
-        <h5>Form Submitted Successfully!</h5>
-        <p>Your form has been submitted.</p>
-        <div className="d-flex justify-content-center mt-3">
-          <button
-            className="btn btn-warning btn-sm"
-            onClick={() => {
-              resetForm(); // Reset the form
-              setShowSuccess(false); // Hide the modal
-              setServiceType(''); // Optionally reset the service type
-              setContact({ name: '', mobile: '' });
-              setIsVerified(false);
-            }}
-          >
-            OK
-          </button>
-        </div>
-      </div>
+  className="modal-content"
+  style={{
+    background: '#fff',
+    padding: '20px',
+    width: '400px',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+  }}
+>
+  <img
+    src={require('./7efs.gif')}
+    alt="Form has been sunmitted successfully"
+    style={{ width: '350px', height: 'auto' }}
+  />
+   <h5>Form Submitted Successfully!</h5>
+  <p>Your form has been submitted.</p> 
+  <div className="d-flex justify-content-center mt-3">
+    <button
+      className="btn btn-warning btn-sm"
+      onClick={() => {
+        resetForm(); // Reset the form
+        setShowSuccess(false); // Hide the modal
+        setServiceType(''); // Optionally reset the service type
+        setContact({ name: '', mobile: '' });
+        setIsVerified(false);
+          // Refresh the page
+    window.location.reload();
+      }}
+    >
+      OK
+    </button>
+  </div>
+</div>
+
     </div>
   )}
 </div>

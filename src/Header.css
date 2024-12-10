@@ -1,0 +1,96 @@
+/* Header container */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #272425;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo */
+.logo img {
+  width: 150px;
+  height: auto;
+  margin-right: 20px;
+}
+
+/* Navigation bar */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  justify-content: space-between; /* Distribute items across the width */
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #eeeeee;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item .icon-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f6ae22; /* Blue color for the circle */
+  margin-right: 8px; /* Space between icon and text */
+}
+
+.nav-item .icon-circle svg {
+  color: white; /* White color for the icons */
+  font-size: 16px;
+}
+
+/* Menu toggle for mobile view */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.menu-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #000;
+  border-radius: 3px;
+}
+
+/* Responsive Design: Adjust for mobile */
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+
+  .nav.open {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
